@@ -19,10 +19,10 @@ are  frequent  and  it  is  important  to serve them as fast as possible, with n
 processes to be created, or to see how many processes were used to handle the peak load.
   * *clientmethod*   A list of acceptable authentication methods for `client-rules`, in order of preference.
 It is thus important that you  specify  these  in the correct order, normally with the more secure methods first.
-    * none
-    * gssapi
-    * rfc931 ("ident")
-    * pam  
+    * *none*
+    * *gssapi*
+    * *rfc931* ("ident")
+    * *pam*  
 The  *default value is all methods* that may be necessary for the later socks-based authentication,
 as specified in the socks-method line.
   * *compatibility*
@@ -39,4 +39,46 @@ client-specific errors, but only more serious "global" errors. The possible valu
 keyword mentioned below. The default  is  to  not have any special place to log errors.
   * **external**   The  address to be used for outgoing connections.  The address given may be either a `IP address` or an `interface name`.
 Can be given multiple times for different addresses.
+  * **external.rotation**  If more than one `external` address is given, this governs which of the given addresses
+is selected as the source address for a given outgoing connections/packet.
+Note that regardless of what sort of external rotation you use, all addresses you want to choose from must be
+listed via the external keyword first.
+    * **none** the default. indicates the first address on the list of external addresses should be used.
+    * **route**  indicates the `kernels routing table` should be consulted to find out what the source address for
+a given destination will  be,  and might  require  you to set `user.privileged to root`.
+    * **same-same** indicates the source address for a given destination should be the same address
+as the Dante server accepted the client’s connection on.
+  * **internal**  The  internal  addresses.   Connections  will  only  be accepted on these addresses.
+The address given may be either a IP address or an interface name.
+  * *libwrap.hosts_access*  If the server is compiled with libwrap support, determines whether the hosts_access()
+function should be used for access  control.  When enabled  by setting this value to yes, the libwrap library
+determines if TCP connections or UDP packets should be immediately dropped or not,
+typically by consulting `/etc/hosts.allow and /etc/hosts.deny`. These checks are applied to all traffic,
+before the  rule  processing starts. The *default value is no (disabled)*.
+  * **logoutput**        This value controls where the server sends logoutput.  It can be set to 
+    * *syslog[/facility]*
+    * *stdout*
+    * *stderr*
+    * **filename**
+    * *combination*
+*The default is nowhere*. Note that if errorlog is also set, there will be a overlap between what is logged there
+(errors only), and what will be logged here (errors, and everything else).
+  * **method** A list of acceptable authentication methods for `socks-rules`, in order of preference
+    * *bsdauth*
+    * *gssapi*
+    * **none**
+    * **pam**
+    * *rfc931*
+    * **username**
+The *default is no methods*, which means all socks-requests will be blocked.
+If a method is not  set  in  this  list  it  will  never  be selected.
+  * *socket* This  keyword  allows  you  to configure a few low-level socket options that relate to the socket buffers
+the Dante server will use when communicating with clients and target hosts.
+Note that these buffers will normally use kernel memory and the kernel may or may not honour the Dante server’s request.
+
+Normally there should be no need to set these values, and the default values should suffice.
+
+The keywords you can set are  *socket.recvbuf.udp, socket.sendbuf.udp, socket.recvbuf.tcp, socket.sendbuf.tcp*.
+
+The numeric argument given to the keyword indicates the size of the socket buffer *in bytes*.
   * 
