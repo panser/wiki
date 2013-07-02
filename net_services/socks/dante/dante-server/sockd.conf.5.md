@@ -147,9 +147,9 @@ Each address can be followed by a optional `port` specifier.
 ## RULES
 There  are two sets of rules and they work at different levels.  
   1. Rules prefixed with `client` are checked first and are used to see if the client is allowed to connect
-to the Dante server.  We call them "**client-rules**". It is recommended  that these *do not use hostnames 
+to the Dante server.  We call them **client-rules**. It is recommended  that these *do not use hostnames 
 but only IP addresses*, both for security and performance reasons.  These rules work  at  the TCP level.
-  2. ther  rules,  which we call "**socks-rules**" are a level higher and are checked after the client connection
+  2. ther  rules,  which we call **socks-rules** are a level higher and are checked after the client connection
 has been accepted by the *client-rules*.  The socks-rules are used to evaluate the socks request that the client sends.
 
 Both set of rules begin with a **pass or deny** keyword, 
